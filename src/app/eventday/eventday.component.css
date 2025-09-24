@@ -1,15 +1,24 @@
 .block{
     position:absolute;
     display:inline-flex;
+    align-items: center;
     overflow: hidden;
-    background-color: lightskyblue;
+    background-color: #2a4d69a6;
 }
 
 .block:hover{
     overflow: visible;
+    border-radius: 18px;
 }
 
 a{
-    font-size: smaller;
+    font-size: 15px;
     white-space: nowrap;
+    color: #fff;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    word-break: break-word;
+    padding: 0 4px;
 }

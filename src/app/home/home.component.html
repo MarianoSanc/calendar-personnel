@@ -1,23 +1,22 @@
-<div class="container">
-    <h1>Calendario tecnico</h1>
-    <div class="row">
-        <div class="col-sm-4 col-xs-5">
+<div class="container-fluid">
+    <div class="hstack gap-3">
+        <div class="p-2 fs-3 fw-semibold">Calendario Técnico</div>
+        <div class="p-2 ms-auto fs-3">
+            <h4>{{ this.months[this.month] + ' ' + this.year }}</h4>
+        </div>
+        <div class="p-2 fs-3">
             <div class="btn-group">
                 <button (click)="this.previousMonth()" type="button" class="btn btn-light">&lt;</button>
                 <button (click)="this.nextMonth()" type="button" class="btn btn-light">&gt;</button>
             </div>
             <div class="btn-group">
-            <button (click)="this.getToday()" type="button" class="btn btn-light" title="Hoy">
-                Hoy
-            </button>
+                <button (click)="this.getToday()" type="button" class="btn btn-light" title="Hoy">
+                    Hoy
+                </button>
             </div>
         </div>
-    
-        <div class="col-sm-4 col-xs-7">
-            <h4>{{ this.months[this.month] + ' ' + this.year }}</h4>
-        </div>
     </div>
-    
+
     <div style="overflow-x:auto;height:700px;">
         <table class="table table-striped-columns" style="table-layout: fixed;">
             <thead>
