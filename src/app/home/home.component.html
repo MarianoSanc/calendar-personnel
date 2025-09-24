@@ -1,41 +1,25 @@
-<div class="container-fluid">
-    <div class="hstack gap-3">
-        <div class="p-2 fs-3 fw-semibold">Calendario Técnico</div>
-        <div class="p-2 ms-auto fs-3">
-            <h4>{{ this.months[this.month] + ' ' + this.year }}</h4>
-        </div>
-        <div class="p-2 fs-3">
+<div class="container">
+    <h1>Calendario tecnico</h1>
+    <div class="row">
+        <div class="col-sm-4 col-xs-5">
             <div class="btn-group">
                 <button (click)="this.previousMonth()" type="button" class="btn btn-light">&lt;</button>
                 <button (click)="this.nextMonth()" type="button" class="btn btn-light">&gt;</button>
             </div>
             <div class="btn-group">
-                <button (click)="this.getToday()" type="button" class="btn btn-light" title="Hoy">
-                    Hoy
-                </button>
+            <button (click)="this.getToday()" type="button" class="btn btn-light" title="Hoy">
+                Hoy
+            </button>
             </div>
         </div>
+    
+        <div class="col-sm-4 col-xs-7">
+            <h4>{{ this.months[this.month] + ' ' + this.year }}</h4>
+        </div>
     </div>
-
-    <div class="table-responsive" style="margin-top: 15px; width: 95%">
-        <table class="table table-light table-striped">
-            <thead>
-                <tr class="table-primary">
-                    <th scope="col">Personal</th>
-                    <th scope="col" *ngFor="let dia of dias">{{dia + 1}}</th>
-                </tr>
-            </thead>
-            <tr style="color: black" *ngFor="let persona of personal">
-                <td>{{persona.name}}</td>
-                <td *ngFor="let dia of persona.day">
-                    <app-eventday [dia]="dia"></app-eventday>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="container-mt-3" style="margin-top: 15px">
-        <table class="table table-striped" style="table-layout: fixed;">
+    
+    <div style="overflow-x:auto;height:700px;">
+        <table class="table table-striped-columns" style="table-layout: fixed;">
             <thead>
                 <tr>
                     <th style="width: 150px;">Personal</th>
@@ -52,38 +36,4 @@
             </tbody>
         </table>
     </div>
-
-    <!-- Tabla: Asignación de Personal a Proyectos por Día (solo mes/año actual) -->
-    <div class="mt-4">
-        <h2>Asignación de Personal a Proyectos por Día (Mes Actual)</h2>
-        <table class="table table-striped" style="table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th style="width: 150px;">Proyecto</th>
-                    <th *ngFor="let dia of dias">{{ dia + 1 }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let proyecto of getNoteRawDataForCurrentMonth()">
-                    <td>{{ proyecto.id_project }}</td>
-                    <td *ngFor="let dia of dias">
-                        <ng-container *ngIf="isProjectActiveOnDay(proyecto, dia + 1); else emptyCell">
-                            <span *ngIf="proyecto.assigned_users.length; else noUsers">
-                                <span *ngFor="let user of proyecto.assigned_users; let last = last">
-                                    {{ user }}<span *ngIf="!last">, </span>
-                                </span>
-                            </span>
-                            <ng-template #noUsers>
-                                <span class="text-muted">-</span>
-                            </ng-template>
-                        </ng-container>
-                        <ng-template #emptyCell>
-                            <span class="text-muted"></span>
-                        </ng-template>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
 </div>
