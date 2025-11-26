@@ -1,5 +1,5 @@
-<div class="block" *ngFor="let events of dia">
+<div class="block" *ngFor="let events of dia" [title]="events.nameProject">
     <a>
-        {{events.nameProject}}
+        {{events.nameProject.split(' ')[0]}}
     </a>
 </div>

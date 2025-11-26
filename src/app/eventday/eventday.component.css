@@ -1,24 +1,48 @@
-.block{
-    position:absolute;
-    display:inline-flex;
+.block {
+    position: relative;
+    display: block;
     align-items: center;
     overflow: hidden;
-    background-color: #2a4d69a6;
+    background-color: #2a4d69b7;
+    margin-bottom: 4px;
+    padding: 4px 2px;
+    border-radius: 4px;
+    min-height: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
 }
 
-.block:hover{
+.project-id {
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.project-name {
+    display: none;
+}
+
+.block:hover {
     overflow: visible;
-    border-radius: 18px;
+    border-radius: 6px;
+    z-indengx: 50;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-a{
-    font-size: 15px;
+.block:hover .project-name {
+    display: inline;
+}
+
+a {
+    font-size: 13px;
     white-space: nowrap;
-    color: #fff;
+    color: #ffffff;
     display: block;
     width: 100%;
     text-align: center;
     font-weight: 500;
     word-break: break-word;
     padding: 0 4px;
+    text-decoration: none;
+    cursor: pointer;
 }

@@ -17,18 +17,25 @@
         </div>
     </div>
 
-    <div style="overflow-x:auto;height:700px;">
-        <table class="table table-striped-columns" style="table-layout: fixed;">
-            <thead>
+    <div style="overflow-x:auto; overflow-y:auto; height:700px;">
+        <table class="table table-bordered" style="table-layout: fixed; min-width: 100%;">
+            <thead style="position: sticky; top: 0; background-color: #fff; z-index: 100;">
                 <tr>
-                    <th style="width: 150px;">Personal</th>
-                    <th *ngFor="let dia of dias">{{dia + 1}}</th>
+                    <th style="width: 150px; position: sticky; left: 0; background-color: #fff; z-index: 101;">Personal
+                    </th>
+                    <th *ngFor="let dia of dias" style="min-width: 120px; text-align: center; vertical-align: middle;">
+                        <div style="font-weight: bold; font-size: 1em;">{{dia.numero}}</div>
+                        <div style="font-size: 0.75em; color: #666;">{{dia.diaSemana.substring(0, 3)}}</div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let persona of personal">
-                    <td>{{persona.name}}</td>
-                    <td *ngFor="let dia of persona.day">
+                    <td
+                        style="position: sticky; left: 0; background-color: #fff; z-index: 10; font-weight: 500; vertical-align: top;">
+                        {{persona.name}}
+                    </td>
+                    <td *ngFor="let dia of persona.day" style="vertical-align: top; padding: 4px; min-height: 60px;">
                         <app-eventday [dia]="dia"></app-eventday>
                     </td>
                 </tr>
