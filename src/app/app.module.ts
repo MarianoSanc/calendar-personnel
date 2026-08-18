@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { EventdayComponent } from './eventday/eventday.component';
+import { FirstWordPipe } from './first-word.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NavbarComponent,
-    EventdayComponent
+    EventdayComponent,
+    FirstWordPipe
   ],
   imports: [
     BrowserModule,

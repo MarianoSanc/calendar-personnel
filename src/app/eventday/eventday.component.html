@@ -1,5 +1,5 @@
-<div class="block" *ngFor="let events of dia">
+<div class="block" *ngFor="let events of dia" [style.width.px]="getEventWidth(events)" [title]="events.nameProject">
     <a>
-        {{events.nameProject}}
+        {{events.nameProject | firstWord}}
     </a>
 </div>

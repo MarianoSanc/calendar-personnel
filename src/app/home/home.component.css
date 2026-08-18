@@ -1,5 +1,119 @@
-td{
-    padding: 0;
-    margin: 0;
-    border: 1px solid #dee2e6;
+/* Container for scrolling both directions */
+.calendar-container {
+  overflow: auto;
+  height: 650px;
+  position: relative;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-top: 10px;
 }
+
+/* Ensure the table is set up for sticky cells */
+.calendar-container table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+}
+
+/* All cells (header & body) */
+.calendar-container th,
+.calendar-container td {
+  padding: 8px;
+  border-bottom: 1px solid #e9ecef;
+  border-right: 1px solid #e9ecef;
+  height: 54px;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+/* Specific column widths */
+.calendar-container th:not(:first-child),
+.calendar-container td:not(:first-child) {
+  width: 70px;
+  min-width: 70px;
+  max-width: 70px;
+  text-align: center;
+}
+
+.calendar-container th:first-child,
+.calendar-container td:first-child {
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+  text-align: left;
+  padding-left: 16px;
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* STICKY STYLING */
+
+/* 1. Sticky Table Header (Vertical Scroll) */
+.calendar-container thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  z-index: 10; /* high z-index for headers */
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* 2. Sticky First Column (Horizontal Scroll) */
+.calendar-container tbody td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #ffffff;
+  z-index: 5; /* higher than scrollable cells but lower than header */
+  border-right: 2px solid #dee2e6;
+}
+
+/* 3. Intersection of Header & First Column (Sticky in both directions) */
+.calendar-container thead th:first-child {
+  position: sticky;
+  top: 0;
+  left: 0;
+  background-color: #f8f9fa;
+  z-index: 15; /* highest z-index for corner cell */
+  border-right: 2px solid #dee2e6;
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* Row hover effect */
+.calendar-container tbody tr:hover td {
+  background-color: #f8f9fa;
+}
+
+/* Ensure sticky first column matches hover style when row is hovered */
+.calendar-container tbody tr:hover td:first-child {
+  background-color: #f1f3f5;
+}
+
+/* Remove default styling padding to accommodate app-eventday positioning */
+.calendar-container tbody td:not(:first-child) {
+  padding: 0;
+  position: relative;
+}
+
+/* Switch toggle styling */
+.toggle-vehicles-switch {
+  cursor: pointer;
+  width: 2.8em !important;
+  height: 1.4em !important;
+}
+
+.toggle-vehicles-switch:focus {
+  box-shadow: 0 0 0 0.25rem rgba(42, 77, 105, 0.25) !important;
+  border-color: #2a4d69 !important;
+}
+
+.toggle-vehicles-switch:checked {
+  background-color: #2a4d69 !important;
+  border-color: #2a4d69 !important;
+}
+

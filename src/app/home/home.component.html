@@ -1,38 +1,62 @@
 <div class="container-fluid">
-    <div class="hstack gap-3">
-        <div class="p-2 fs-3 fw-semibold">Calendario Técnico</div>
-        <div class="p-2 ms-auto fs-3">
-            <h4>{{ this.months[this.month] + ' ' + this.year }}</h4>
-        </div>
-        <div class="p-2 fs-3">
-            <div class="btn-group">
-                <button (click)="this.previousMonth()" type="button" class="btn btn-light">&lt;</button>
-                <button (click)="this.nextMonth()" type="button" class="btn btn-light">&gt;</button>
-            </div>
-            <div class="btn-group">
-                <button (click)="this.getToday()" type="button" class="btn btn-light" title="Hoy">
-                    Hoy
-                </button>
-            </div>
-        </div>
+  <div class="hstack gap-3 align-items-center">
+    <div class="p-2 fs-3 fw-semibold">Calendario Técnico</div>
+    
+    <div class="form-check form-switch ms-3 d-flex align-items-center mt-1">
+      <input class="form-check-input toggle-vehicles-switch" 
+             type="checkbox" 
+             role="switch" 
+             id="vehicleToggle" 
+             [checked]="showVehicles"
+             (change)="onToggleVehicles($event)">
+      <label class="form-check-label fw-semibold text-secondary ms-2" for="vehicleToggle">Vehículos</label>
     </div>
+    
+    <div class="p-2 ms-auto fs-3">
+      <h4>{{ this.months[this.month] + " " + this.year }}</h4>
+    </div>
+    <div class="p-2 fs-3">
+      <div class="btn-group">
+        <button
+          (click)="this.previousMonth()"
+          type="button"
+          class="btn btn-light"
+        >
+          &lt;
+        </button>
+        <button (click)="this.nextMonth()" type="button" class="btn btn-light">
+          &gt;
+        </button>
+      </div>
+      <div class="btn-group">
+        <button
+          (click)="this.getToday()"
+          type="button"
+          class="btn btn-light"
+          title="Hoy"
+        >
+          Hoy
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <div style="overflow-x:auto;height:700px;">
-        <table class="table table-striped-columns" style="table-layout: fixed;">
-            <thead>
-                <tr>
-                    <th style="width: 150px;">Personal</th>
-                    <th *ngFor="let dia of dias">{{dia + 1}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let persona of personal">
-                    <td>{{persona.name}}</td>
-                    <td *ngFor="let dia of persona.day">
-                        <app-eventday [dia]="dia"></app-eventday>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="calendar-container">
+    <table class="table table-striped-columns">
+      <thead>
+        <tr>
+          <th>{{ showVehicles ? 'Vehículos' : 'Personal' }}</th>
+          <th *ngFor="let dia of dias">{{ dia + 1 }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let persona of personal">
+          <td>{{ persona.name }}</td>
+          <td *ngFor="let dia of persona.day">
+            <app-eventday [dia]="dia" [year]="year" [month]="month"></app-eventday>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
