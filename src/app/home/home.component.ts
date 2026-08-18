@@ -1,15 +1,24 @@
 import { Component } from '@angular/core';
 import { BackendService } from '../backend.service';
 
+/**
+ * Componente principal del calendario de personal técnico.
+ * Gestiona la visualización mensual de reuniones/proyectos asignados a cada usuario.
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+  // Fecha actual del sistema
   today: Date = new Date();
+
+  // Mes y año que se está visualizando en el calendario
   month: any;
   year: any;
+
+  // Array con los nombres de los meses en español para mostrar en la interfaz
   months: any[] = [
     "Enero",
     "Febrero",
@@ -25,19 +34,33 @@ export class HomeComponent {
     "Diciembre",
   ];
 
+  // Array que contendrá la lista de usuarios con sus eventos organizados por día
   personal: any[] = [];
+
+  // Array que representa los días del mes (índices: 0-30)
   dias: any[] = [];
   showVehicles: boolean = false;
 
-  constructor(protected backendService:BackendService){}
+  constructor(protected backendService: BackendService) { }
 
-  ngOnInit(){
+  /**
+   * Hook de inicialización del componente.
+   * Establece el mes y año actual y carga los proyectos.
+   */
+  ngOnInit() {
     this.year = this.today.getFullYear();
     this.month = this.today.getMonth();
     this.getProjects();
   }
 
-  daysInMonth(month:any,year:any) {
+  /**
+   * Calcula la cantidad de días que tiene un mes específico.
+   * @param month - Mes (0-11, donde 0 = Enero)
+   * @param year - Año completo (ej: 2025)
+   * @returns Número de días del mes (28-31)
+   */
+  daysInMonth(month: any, year: any) {
+    // Crear fecha del día 0 del mes siguiente = último día del mes actual
     return new Date(year, month + 1, 0).getDate();
   }
 
@@ -77,7 +100,7 @@ export class HomeComponent {
       };
     } else {
       projects = {
-        bd:"hvtest2",
+        bd: "hvtest2",
         table: "meeting",
         action: "get",
         opts: {
@@ -88,7 +111,7 @@ export class HomeComponent {
           },
           where: {
             greaterequal: {
-              date_end: this.year + "-" + (this.month + 1) + "-01 00:00:00",
+              date_start: this.year + "-" + (this.month + 1) + "-01 00:00:00",
             },
             lesserequal: {
               date_start: this.year +
@@ -102,20 +125,100 @@ export class HomeComponent {
         }
       };
     }
+              "-" +
+              (this.month + 1) +
+              "-" +
+              this.daysInMonth(this.month, this.year) +
+              " 23:59:59",
+    // Array con nombres de días de la semana (usado para UI opcional)
+    const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
+    // Reiniciar el array de días y llenarlo con objetos informativos
     this.dias = [];
-    for(let i=0;i<this.daysInMonth(this.month,this.year);i++)this.dias.push(i);
-    this.backendService.post(projects).subscribe((response:any)=>{
-      if(response.result){
-        let items: any[] = [];
-        
+    for (let i = 0; i < this.daysInMonth(this.month, this.year); i++) {
+      let fecha = new Date(this.year, this.month, i + 1);
+      let diaSemana = fecha.getDay();
+
+      this.dias.push({
+        numero: i + 1,
+        diaSemana: diasSemana[diaSemana],
+        diaSemanaNum: diaSemana
+      });
+    }
+
+    console.log('Días del mes con días de la semana:', this.dias);
+
+    // Realizar la petición HTTP al backend
+    this.backendService.post(projects).subscribe((response: any) => {
+      if (response.result) {
         if (this.showVehicles) {
+          // Procesar vista por vehículos (similar a la implementación previa)
+          let items: any[] = [];
           response.result.forEach((element: any) => {
             if (element.idVehicle) {
               let veh = items.find((el: any) => el.id == element.idVehicle);
               if (veh == undefined) {
                 items.push({ name: element.nameVehicle, id: element.idVehicle, day: [] });
               }
+            }
+          });
+
+          // Para cada vehículo, construir su array de días
+          items.forEach((item: any) => {
+            for (let i = 0; i < this.daysInMonth(this.month, this.year); i++) {
+              let dayDate = new Date(this.year, this.month, i + 1);
+              let events = response.result.filter((res: any) => {
+                let start = new Date(res.date_start);
+                return res.idVehicle == item.id && start.getDate() == dayDate.getDate();
+              });
+              item.day.push(events.length ? events : []);
+            }
+          });
+
+          this.personal = items;
+        } else {
+          // Procesar vista por personal/usuarios (incoming branch approach)
+          let users: any[] = [];
+
+          // Extraer usuarios únicos
+          response.result.forEach((element: any) => {
+            let usr = users.find((el: any) => el.id == element.idUser);
+            if (usr == undefined) users.push({
+              name: element.first_name + ' ' + element.last_name,
+              id: element.idUser,
+              day: []
+            });
+          });
+
+          // Para cada usuario, organizar sus eventos por día
+          users.forEach((user: any) => {
+            let srch = response.result.filter((res: any) => user.id == res.idUser);
+
+            for (let i = 0; i < this.daysInMonth(this.month, this.year); i++) {
+              let day = new Date(this.year, this.month, i + 1);
+
+              let events = srch.filter((result: any) => {
+                let start = new Date(result.date_start);
+                return day.getDate() == start.getDate();
+              });
+
+              if (!events || events.length == 0) {
+                user.day.push([]);
+              } else {
+                user.day.push(events);
+              }
+            }
+          });
+
+          // Asignar la lista de usuarios procesada
+          this.personal = users;
+        }
+      } else {
+        this.personal = [];
+      }
+    });
+  }
+
             }
           });
         } else {
@@ -155,36 +258,44 @@ export class HomeComponent {
             }
           });
         });
-        this.personal = items;
-      } else {
-        this.personal = [];
       }
     });
   }
 
-  previousMonth(){
+  /**
+   * Navega al mes anterior.
+   * Si está en Enero, retrocede a Diciembre del año anterior.
+   */
+  previousMonth() {
     if (this.month == 0) {
-      this.month = 11;
+      this.month = 11; // Diciembre
       this.year = this.year - 1;
     } else {
       this.month = this.month - 1;
     }
-    this.getProjects();
+    this.getProjects(); // Recargar proyectos del nuevo mes
   }
 
-  nextMonth(){
+  /**
+   * Navega al mes siguiente.
+   * Si está en Diciembre, avanza a Enero del año siguiente.
+   */
+  nextMonth() {
     if (this.month == 11) {
-      this.month = 0;
+      this.month = 0; // Enero
       this.year = this.year + 1;
     } else {
       this.month = this.month + 1;
     }
-    this.getProjects();
+    this.getProjects(); // Recargar proyectos del nuevo mes
   }
 
-  getToday(){
+  /**
+   * Regresa a la vista del mes actual (hoy).
+   */
+  getToday() {
     this.year = this.today.getFullYear();
     this.month = this.today.getMonth();
-    this.getProjects();
+    this.getProjects(); // Recargar proyectos del mes actual
   }
 }

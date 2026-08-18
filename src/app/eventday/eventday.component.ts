@@ -1,5 +1,10 @@
 import { Component, Input, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 
+/**
+ * Componente que maneja la visualización de eventos en un día del calendario.
+ * Se encarga de ajustar el ancho de los bloques de eventos según su duración
+ * y responde a cambios en el tamaño de la ventana.
+ */
 @Component({
   selector: 'app-eventday',
   templateUrl: './eventday.component.html',
